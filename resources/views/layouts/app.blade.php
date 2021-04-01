@@ -14,7 +14,9 @@
 </head>
 <body>
     <div id="app">
-        <router-view></router-view>
+        
+        <home/>
+        
     </div>
         <script src="{{ asset('js/app.js') }}" defer></script>
 </body>
