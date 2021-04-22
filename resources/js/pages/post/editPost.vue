@@ -19,10 +19,10 @@
                     <router-link class="btn btn-info" to="/post">Post</router-link>
                   </div>
                 </div>
-                <form @submit.prevent="addCategory" enctype="multipart/form-data" >
+                <form @submit.prevent="updatePost" enctype="multipart/form-data" >
                     <div class="form-group">
                       <label for="exampleInputEmail1">Title</label>
-                      <input v-model="post.title" type="text" name="title"
+                      <input v-model="post.title" type="text" name="title" value="{ ePost.title }"
                         class="form-control" :class="{ 'is-invalid': post.errors.has('title') }">
                     <has-error :form="post" field="title"></has-error>
                     </div>
@@ -35,9 +35,22 @@
                     </div>
 
                   <div class="form-group">
+                    <div class="row">
+                      <div class="col-md-6">
                         <label for="">Upload Image</label>
                         <input type="file" @change="getImage" class="form-control-file" :class="{ 'is-invalid': post.errors.has('image') }">
-                    <has-error :form="post" field="image"></has-error>
+                        <has-error :form="post" field="image"></has-error>
+                      </div>
+                    
+
+                    
+                      <div class="col-md-6">
+                         <div style="max-width:150px; max-height:100px; overflow: hidden;">
+                         <img :src="image" class="img-fluid" alt="">
+                         </div>
+                      </div>
+                    </div>
+                       
                     </div>
 
                   <div class="from-group"> 
@@ -84,18 +97,20 @@ export default {
               category_id: '',
               sort_description: '',
               long_description: '',
+              _method: 'put'
           }),
-
+          id:'',
+          image:'',
             categories: {}
             
             }
     },
 
     methods: {
-        addCategory(){
+        updatePost(){
             
             
-           this.post.post('http://127.0.0.1:8000/api/post', {
+           this.post.post(`/api/post/${this.$route.params.id}`, {
 
                    transformRequest: [function (data, headers) {
                 return objectToFormData(data)
@@ -108,13 +123,8 @@ export default {
             
          
         }).then(({res}) => {
-              this.post.title = '',
-              this.post.sub_title = '',
-              this.post.image = '',
-              this.post.category_id = '',
-              this.post.sort_description = '',
-              this.post.long_description = '',
-             this.$toast.success('Post Added!')
+            
+             this.$toast.success('Post Updated!')
            }).catch(({error}) => {
              this.$toast.error("Something want wrong!")
            })
@@ -129,7 +139,19 @@ export default {
     },
 
     created() {
+      this.id = this.$route.params.id;
       axios.get('http://127.0.0.1:8000/api/category-with-index').then(res => (this.categories = res.data.categorys))
+      axios.get('http://127.0.0.1:8000/api/post/'+this.id).then(res => (
+        this.post.title = res.data.post.title,
+        this.post.sub_title = res.data.post.sub_title,
+        this.image = res.data.post.image,
+        this.post.category_id = res.data.post.category_id,
+        this.post.long_description = res.data.post.long_description,
+        this.post.sort_description = res.data.post.sort_description
+        
+        ));
+     
+    
       
     }
 

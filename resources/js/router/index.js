@@ -4,6 +4,7 @@ import Dashboard from '../pages/Dashboard.vue';
 import Category from '../pages/categorie/Category.vue';
 import Post from '../pages/post/index.vue';
 import addPost from '../pages/post/addPost.vue';
+import editPost from '../pages/post/editPost.vue';
 import addCategory from '../pages/categorie/addCategory.vue';
 import edit from '../pages/categorie/edit.vue';
 Vue.use(VueRouter);
@@ -33,6 +34,12 @@ const router = new VueRouter({
              path: '/addPost',
              component: addPost,
              name: "addPosts"
+             
+         },
+         {
+             path: '/editPost:id',
+             component: editPost,
+             name: "editPost"
              
          },
          {

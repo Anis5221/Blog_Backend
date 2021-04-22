@@ -19,27 +19,39 @@
                 <router-link class="btn btn-info" to="/addPost" id="addbutton">Add Post</router-link>
               </div>
             </div>
-            <table class="table">
+            <table class="table" v-if="posts" >
               <thead>
                 <tr>
-                  <th >#</th>
+                  <th>#</th>
                   <th>Title</th>
-                  <th>Slug</th>
+                  <th>Sub title</th>
+                  <th>Category</th>
+                  <th>Image</th>
+                  <th>Sort Description</th>
+                  <th>Long Description</th>
                   <th>Active</th>
                   <th>action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(category,index) in categories" :key="index">
-                  <td>{{ category.id }}</td>
-                  <td>{{ category.title }}</td>
-                  <td>{{ category.slug }}</td>
-
-                  <td v-if=" category.active === 1">Yes</td>
-                  <td v-if=" category.active === 0">No</td>
+                <tr v-for="(post,index) in posts" :key="index">
+                  <td>{{ post.id }}</td>
+                  <td>{{ post.title }}</td>
+                  <td>{{ post.sub_title }}</td>
+                  <td>{{ post.category_id }}</td>
                   <td>
-                  <router-link :to="{name:'categoryEdit', params:{id: category.id}}" class="btn btn-sm btn-success">Edit</router-link>
-                  <button @click="deleteCategory(category.id)" class="btn btn-sm btn-danger">Delete</button>
+                    <div style="max-width:150px; max-height:100px; overflow: hidden;">
+                      <img :src="post.image" class="img-fluid" alt="">
+                    </div>
+                    
+                  </td>
+                  <td>{{ post.sort_description }}</td>
+                  <td>{{ post.long_description }}</td>
+                  <td v-if=" post.active === 1">Yes</td>
+                  <td v-if=" post.active === 0">No</td>
+                  <td>
+                  <router-link :to="{name:'editPost', params:{id: post.id}}" class="btn btn-sm btn-success">Edit</router-link>
+                  <button @click="deletepost(post)" class="btn btn-sm btn-danger">Delete</button>
                   </td>
                 </tr>
               </tbody>
@@ -59,17 +71,20 @@ export default {
 
   data (){
     return {
-      categories:{}
+      posts:{}
       }
   },
 
   created(){
-    axios.get('http://127.0.0.1:8000/api/category').then(res => (this.categories = res.data.cat))
+    axios.get('/api/post').then(res => (this.posts = res.data.postList))
+   
   },
 
   methods: {
-    deleteCategory(id){
-      axios.delete('http://127.0.0.1:8000/api/category/'+id,).then(res => console.log(res))
+    deletepost(post){
+      axios.delete('http://127.0.0.1:8000/api/post/'+post.id,).then(res => console.log(res))
+      const index = this.posts.indexOf(post);
+      this.posts.splice(index,1);
     
     }
   }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use File;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -14,7 +15,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $postList = Post::latest()->get();
+        return response()->json(compact('postList'), 200);
     }
 
     /**
@@ -44,14 +46,16 @@ class PostController extends Controller
         ]);
 
         if($request->hasFile('image')){
-
+            $image = $request->image;
             $imagename = time().'_'.uniqid().'.'.$request->image->getClientOriginalExtension();
-            $request->image->move(public_path('storage/image', $imagename));
-            $imagepath = 'storage/image'.$imagename;
+            $imagepublicpath = public_path('storage/image');
+            $image->move($imagepublicpath, $imagename);
+            $imagepath = '/storage/image/'.$imagename;
         }
         $attributes = [
             'title' => $request->title,
             'sub_title' => $request->sub_title,
+            'user_id' => 1,
             'image' => $imagepath??null,
             'category_id' => $request->category_id,
             'sort_description' => $request->sort_description,
@@ -59,7 +63,9 @@ class PostController extends Controller
             'active' => 1
         ];
 
-        return response()->json(compact('attributes'));
+        Post::create($attributes);
+
+        return response()->json('success', 200);
     }
 
     /**
@@ -70,7 +76,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return response()->json(compact('post'));
     }
 
     /**
@@ -81,19 +87,43 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return response()->json(compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Post $post)
     {
-        //
+       
+        
+        if($request->hasFile('image')){
+            $image = $request->image;
+            $imagename = time().'_'.uniqid().'.'.$request->image->getClientOriginalExtension();
+            $imagepublicpath = public_path('storage/image');
+            $image->move($imagepublicpath, $imagename);
+            if(File::exists($post->image)){
+                unlink($post->image);
+            }
+            $imagepath = '/storage/image/'.$imagename;
+        }
+        if($imagepath == null){
+            $imagepath = $post->image;
+        }
+       
+
+        $attributes = [
+            'title' => $request->title,
+            'sub_title' => $request->sub_title,
+            'user_id' => 1,
+            'image' => $imagepath??null,
+            'category_id' => $request->category_id,
+            'sort_description' => $request->sort_description,
+            'long_description' => $request->long_description,
+            'active' => 1
+        ];
+
+        $result = $post->update($attributes);
+
+        return response()->json(compact('result'),200);
     }
 
     /**
@@ -104,6 +134,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if(File::exists($post->image))
+        {
+            unlink($post->image);
+        }
+        $post->delete();
+        return response()->json('success', 200);
     }
 }
