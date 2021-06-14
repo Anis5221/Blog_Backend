@@ -7,6 +7,7 @@ import addPost from '../pages/post/addPost.vue';
 import editPost from '../pages/post/editPost.vue';
 import addCategory from '../pages/categorie/addCategory.vue';
 import edit from '../pages/categorie/edit.vue';
+import login from '../pages/auth/login.vue'
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -51,6 +52,11 @@ const router = new VueRouter({
              path: '/category/edit:id',
              component: edit,
              name: 'categoryEdit'
+         },
+         {
+             path: '/login',
+             component: login,
+             name: 'login'
          }
     ]
 });
