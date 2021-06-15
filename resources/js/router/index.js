@@ -17,36 +17,36 @@ const router = new VueRouter({
         {
             path: '/',
             component: Dashboard,
-            
+
          },
          {
             path: '/category',
             component: Category,
             name: "categories"
-          
+
          },
          {
              path: '/post',
              component: Post,
              name: "Posts"
-             
+
          },
          {
              path: '/addPost',
              component: addPost,
              name: "addPosts"
-             
+
          },
          {
              path: '/editPost:id',
              component: editPost,
              name: "editPost"
-             
+
          },
          {
              path: '/addCategory',
              component: addCategory,
-             
+
          },
          {
              path: '/category/edit:id',

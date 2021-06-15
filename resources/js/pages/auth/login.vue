@@ -45,7 +45,14 @@ export default {
                     email: "parsonal494@gmail.com",
                     password: "anis5221"
                 } ).then(response => {
-                    console.log(response)
+                    if ( response.data.token ) {
+                        localStorage.setItem(
+                            'user_token',
+                            response.data.token
+                        )
+
+                        window.location.replace('/')
+                    }
                 })
             });
         }

@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\API\RoughController;
 use App\Http\Controllers\API\AdminController;
+use App\Http\Controllers\API\UserControllre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,9 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:sanctum')->get('/current',[UserControllre::class, 'currentUser']);
 
 Route::apiResource('/category', CategoryController::class);
 Route::apiResource('/post', PostController::class);
