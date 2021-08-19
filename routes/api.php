@@ -25,4 +25,6 @@ Route::apiResource('/category', CategoryController::class);
 Route::apiResource('/post', PostController::class);
 
 Route::get('/category-with-index',[RoughController::class, 'getCategory']);
-Route::post('/login', [AdminController::class, 'login']);
+Route::post('login', [AdminController::class, 'login']);
+Route::post('logout', [AdminController::class, 'logout']);
+Route::middleware('auth:sanctum')->get('/user',[UserControllre::class, 'user']);

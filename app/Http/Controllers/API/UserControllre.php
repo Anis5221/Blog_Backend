@@ -15,6 +15,10 @@ class UserControllre extends Controller
         return Auth::user();
     }
 
+    public function user () {
+        return Auth::user();
+    }
+
     public function register(Request $request) {
 
         $validated = $request->validate([

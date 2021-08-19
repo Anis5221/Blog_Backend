@@ -13,11 +13,11 @@ class AdminController extends Controller
         // $credential = $request->only('email', 'password');
 
         if( Auth::attempt(['email' => $request->email, 'password' => $request->password]) ) {
-            
+            $request->session()->regenerate();
             $token = $request->user()->createToken('mytoken');
             return response()->json([
                 'token' => $token->plainTextToken,
-            ], 200);
+            ], 201);
         }else{
             return response()->json([
                 'message' => 'Credential not match!'
@@ -26,7 +26,10 @@ class AdminController extends Controller
 
     }
 
-    public function logout() {
-        return Auth::logout();
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return response()->json(null, 200);
     }
 }
