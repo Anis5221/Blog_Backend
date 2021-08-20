@@ -25,6 +25,9 @@
         "vue-loader": "^15.9.6",
         "vue-template-compiler": "^2.6.10"
     },
+    "engines": {
+        "node": "14.x"
+      },
     "dependencies": {
         "cxlt-vue2-toastr": "^1.1.1",
         "object-to-formdata": "^3.0.9",
